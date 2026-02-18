@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>настюшеньке</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            min-height: 100dvh; /* Для мобильных браузеров с адресной строкой */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 107, 157, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect fill="%230a0a0a" width="100" height="100"/><circle cx="50" cy="50" r="1" fill="%23ff6b9d" opacity="0.1"/></svg>');
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh; /* Для мобильных браузеров */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 107, 157, 0.15), transparent);
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+            animation: floatOrb 8s ease-in-out infinite;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255, 107, 157, 0.1), transparent);
+            border-radius: 50%;
+            bottom: 15%;
+            right: 10%;
+            animation: floatOrb 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .card {
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+            z-index: 20;
+            position: relative;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .hidden-content.active ~ .container .card {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #hiddenContent.active ~ .container .card {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .title {
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            font-family: 'Playfair Display', serif;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 107, 157, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(255, 107, 157, 0.6); }
+        }
+
+        .subtitle {
+            color: #ff6b9d;
+            font-size: 0.9rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(255, 107, 157, 0.05));
+            border: 2px solid #ff6b9d;
+            color: #ff6b9d;
+            padding: 16px 45px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.1);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 157, 0.1), transparent);
+            opacity: 0;
+            animation: btnGlow 2s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes btnGlow {
+            0%, 100% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.35), rgba(255, 107, 157, 0.15));
+            box-shadow: 0 0 40px rgba(255, 107, 157, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Скрытый контент */
+        .hidden-content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            overflow-y: auto;
+            padding: 40px 20px;
+            animation: fadeInContent 0.6s ease-out;
+        }
+
+        .hidden-content::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: none;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fadeInContent {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hidden-content.active {
+            display: flex;
+        }
+
+        .messages-container {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: block;
+            z-index: 102;
+            pointer-events: none;
+        }
+
+        .message {
+            color: #ff6b9d;
+            padding: 16px 22px;
+            font-size: 1.05rem;
+            letter-spacing: 0.3px;
+            opacity: 0;
+            position: fixed;
+            pointer-events: none;
+            animation: messageAppear 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            background: rgba(255, 107, 157, 0.2);
+            border: 2px solid #ff6b9d;
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
+            white-space: normal;
+            z-index: 102;
+            box-shadow: 0 8px 32px rgba(255, 107, 157, 0.3);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            max-width: 80vw;
+            line-height: 1.4;
+        }
+
+        @keyframes messageAppear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.4) rotate(-20deg);
+                filter: blur(15px);
+            }
+            45% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                filter: blur(0);
+            }
+        }
+
+        .message::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(135deg, #ff6b9d, #ff8ec5, #ff6b9d);
+            border-radius: 12px;
+            opacity: 0;
+            animation: messageBorderGlow 1s ease-out forwards;
+            z-index: -1;
+        }
+
+        @keyframes messageBorderGlow {
+            0% { opacity: 0; }
+            100% { opacity: 0.25; }
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 107, 157, 0.15);
+            border: 2px solid #ff6b9d;
+            color: #ff6b9d;
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 101;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.1);
+        }
+
+        .close-btn.active {
+            display: flex;
+        }
+
+        .close-btn:hover, .close-btn:active {
+            background: rgba(255, 107, 157, 0.25);
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.3);
+            transform: scale(1.1);
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 107, 157, 0.35);
+            box-shadow: 0 0 25px rgba(255, 107, 157, 0.5);
+            transform: rotate(90deg);
+        }
+
+        .glow {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 107, 157, 0.9), rgba(255, 107, 157, 0.4), transparent);
+            animation: glowExpand 1.4s ease-out forwards;
+            z-index: 99;
+            box-shadow: 0 0 80px rgba(255, 107, 157, 0.6);
+        }
+
+        @keyframes glowExpand {
+            0% {
+                width: 50px;
+                height: 50px;
+                opacity: 1;
+            }
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+
+        .light-beam {
+            position: fixed;
+            pointer-events: none;
+            background: linear-gradient(to bottom, rgba(255, 107, 157, 0.5), transparent);
+            animation: beamShine 1.6s ease-out forwards;
+            z-index: 98;
+            box-shadow: 0 0 40px rgba(255, 107, 157, 0.4);
+        }
+
+        @keyframes beamShine {
+            0% {
+                opacity: 0;
+                transform: scaleY(0);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scaleY(1);
+            }
+        }
+
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.2em;
+            animation: sparkleFloat 2s ease-out forwards;
+            z-index: 99;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) translateX(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-300px) translateX(200px) scale(0);
+            }
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.8em;
+            animation: particleExplode 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            z-index: 99;
+        }
+
+        @keyframes particleExplode {
+            0% {
+                opacity: 1;
+                transform: translateY(0) translateX(0) scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-250px) translateX(180px) scale(0.05) rotate(720deg);
+            }
+        }
+
+        .loading-text {
+            color: #ff6b9d;
+            font-size: 0.95rem;
+            letter-spacing: 1.5px;
+            animation: blink 1.5s ease-in-out infinite;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .animation-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .animation-container::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            background: none;
+            display: none;
+        }
+
+        @keyframes pulseOrb {
+            0%, 100% { transform: scale(0.8); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.6; }
+        }
+
+        .couple-scene {
+            max-width: 90vw;
+            max-height: 60vh;
+            height: auto;
+            width: auto;
+            margin-bottom: 50px;
+            animation: fadeInImage 0.8s ease-out forwards;
+            object-fit: contain;
+            background: transparent !important;
+            border: none;
+            box-shadow: none;
+        }
+
+        @keyframes fadeInImage {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .person {
+            display: none;
+        }
+
+        .stick-man {
+            display: none;
+        }
+
+        .stick-head {
+            display: none;
+        }
+
+        .stick-head::before {
+            display: none;
+        }
+
+        .stick-head::after {
+            display: none;
+        }
+
+        .stick-body {
+            display: none;
+        }
+
+        .stick-arms {
+            display: none;
+        }
+
+        .stick-legs {
+            display: none;
+        }
+
+        .leg {
+            display: none;
+        }
+
+        .leg-1 {
+            display: none;
+        }
+
+        .leg-2 {
+            display: none;
+        }
+
+        @keyframes legSwing {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(25deg); }
+        }
+
+        .left-person {
+            display: none;
+        }
+
+        .right-person {
+            display: none;
+        }
+
+        @keyframes walkLeft {
+            0% {
+                transform: translateX(-150px) scaleX(-1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(0) scaleX(-1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes walkRight {
+            0% {
+                transform: translateX(150px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .kiss-effect {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            opacity: 0;
+            animation: kissAnimation 2s ease-in-out 2s forwards;
+            z-index: 50;
+        }
+
+        @keyframes kissAnimation {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(2);
+            }
+        }
+
+        .kiss-effect::before {
+            content: '💋';
+            font-size: 60px;
+            position: absolute;
+            animation: kissPulse 2s ease-in-out;
+        }
+
+        @keyframes kissPulse {
+            0%, 100% {
+                transform: scale(0) rotate(-45deg);
+            }
+            50% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            animation: confettiFall 3s ease-in forwards;
+            z-index: 105;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(600px) translateX(var(--tx));
+                opacity: 0;
+            }
+        }
+
+        /* === МОБИЛЬНАЯ ОПТИМИЗАЦИЯ === */
+        @media (max-width: 768px) {
+            .card {
+                padding: 20px;
+                max-width: 90vw;
+            }
+
+            .title {
+                font-size: 2rem;
+                margin-bottom: 25px;
+                letter-spacing: 2px;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 30px;
+                letter-spacing: 1px;
+            }
+
+            .btn {
+                padding: 14px 35px;
+                font-size: 0.95rem;
+                letter-spacing: 1px;
+                min-width: 120px;
+                min-height: 44px;
+            }
+
+            .message {
+                font-size: 0.95rem;
+                padding: 12px 16px;
+                max-width: 85vw;
+            }
+
+            .container::before {
+                width: 150px;
+                height: 150px;
+                top: 5%;
+                left: 5%;
+            }
+
+            .container::after {
+                width: 120px;
+                height: 120px;
+                bottom: 10%;
+                right: 5%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                min-height: 100vh;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .card {
+                text-align: center;
+                width: 100%;
+                padding: 25px 15px;
+            }
+
+            .title {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+                letter-spacing: 2px;
+            }
+
+            .subtitle {
+                font-size: 0.75rem;
+                margin-bottom: 25px;
+                letter-spacing: 1px;
+            }
+
+            .btn {
+                padding: 14px 30px;
+                font-size: 0.9rem;
+                letter-spacing: 0.8px;
+                width: 100%;
+                max-width: 280px;
+                min-height: 48px;
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+            }
+
+            /* Stick figure sizes для мобильных */
+            .stick-man {
+                transform: scale(0.75);
+                margin: 0 auto;
+            }
+
+            .couple-scene {
+                width: 100%;
+                height: auto;
+                padding: 30px 20px;
+            }
+
+            .person {
+                width: 80px;
+                height: 120px;
+            }
+
+            .message {
+                font-size: 0.85rem;
+                padding: 12px 16px;
+                max-width: 90vw;
+                line-height: 1.3;
+                border-radius: 12px;
+            }
+
+            .close-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 28px;
+            }
+
+            .container::before {
+                width: 120px;
+                height: 120px;
+                top: 3%;
+                left: 3%;
+                opacity: 0.5;
+            }
+
+            .container::after {
+                width: 100px;
+                height: 100px;
+                bottom: 8%;
+                right: 3%;
+                opacity: 0.5;
+            }
+
+            .hidden-content::before {
+                display: none;
+            }
+
+            .hidden-content::after {
+                display: none;
+            }
+
+            .animation-container {
+                padding: 30px 15px;
+            }
+
+            .animation-container::before {
+                width: 150px;
+                height: 150px;
+                opacity: 0.3;
+            }
+
+            /* Confetti - уменьшено количество и размер для мобильных */
+            .confetti {
+                font-size: 0.8rem !important;
+            }
+
+            /* Particle effects - меньше на мобильных */
+            .particle {
+                font-size: 1.2rem;
+            }
+
+            .sparkle {
+                font-size: 0.9rem;
+            }
+
+            @keyframes walkLeft {
+                0% {
+                    transform: translateX(-100px) scaleX(-1);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateX(0) scaleX(-1);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes walkRight {
+                0% {
+                    transform: translateX(100px);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        }
+
+        @media (max-width: 360px) {
+            .title {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+
+            .subtitle {
+                font-size: 0.7rem;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 0.85rem;
+            }
+
+            .message {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+
+            .stick-man {
+                transform: scale(0.65);
+            }
+
+            .person {
+                width: 70px;
+                height: 100px;
+            }
+        }
+
+        /* Улучшение для сенсорных устройств */
+        @media (hover: none) and (pointer: coarse) {
+            .btn:active {
+                transform: scale(0.98);
+                box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            }
+
+            .message {
+                border-radius: 14px;
+            }
+
+            .btn {
+                -webkit-tap-highlight-color: rgba(255, 107, 157, 0.2);
+            }
+        }
+
+        /* Ориентация - портрет */
+        @media (orientation: portrait) and (max-width: 768px) {
+            .container {
+                min-height: 100vh;
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px 15px;
+            }
+
+            .animation-container {
+                min-height: 50vh;
+            }
+        }
+
+        /* Ориентация - пейзаж */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .container {
+                min-height: 100vh;
+            }
+
+            .title {
+                margin-bottom: 15px;
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                margin-bottom: 15px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+            }
+
+            .stick-man {
+                transform: scale(0.6);
+            }
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 107, 157, 0.15);
+            border: 2px solid #ff6b9d;
+            padding: 16px 32px;
+            border-radius: 50px;
+            color: #ff6b9d;
+            font-size: 1.1rem;
+            font-weight: 500;
+            z-index: 101;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(255, 107, 157, 0.2);
+            display: none;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .counter.active {
+            display: block;
+            animation: counterPulse 0.6s ease-out;
+        }
+
+        @keyframes counterPulse {
+            0% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .counter {
+                bottom: 15px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+                border-radius: 8px;
+            }
+        }
+    </style></head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="title">💕</div>
+            <div class="subtitle">для кисули</div>
+            <button class="btn" onclick="openSurprise()">открыть</button>
+        </div>
+    </div>
+
+    <div class="hidden-content" id="hiddenContent">
+        <div class="animation-container" id="animationContainer">
+            <img src="pipa.gif" class="couple-scene" id="kisaImage" alt="pipa">
+            <div class="kiss-effect" id="kissEffect"></div>
+        </div>
+        <div class="messages-container" id="messagesContainer" style="display: none;"></div>
+    </div>
+
+    <button class="close-btn" id="closeBtn" onclick="closeSurprise()">×</button>
+    <div class="counter" id="counter"></div>
+
+    <script>
+        const hearts = ['💕', '💖', '💗', '💓', '💞', '❤️', '💘'];
+        const nicknames = ['киса', 'зая', 'любимая', 'милая', 'пуся', 'солнышко', 'сладкая', 'красивая', 'малышка', 'настюшенька'];
+        const phrases = [
+            'я люблю тебя',
+            'я очень сильно тебя люблю',
+            'хочу всегда быть с тобой',
+            'ты самая лучшая',
+            'ты самая милая',
+            'думаю о тебе всегда,',
+            'я люблю очень тебя',
+            'ты мое счастье',
+            'ты самая красивая',
+        ];
+        let isLoading = true;
+        
+        // Определяем мобильное устройство
+        const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isSmallScreen = window.innerWidth <= 480;
+
+        function createParticles(x, y) {
+            if (!isMobile) {
+                const particleCount = isSmallScreen ? 4 : (isMobile ? 6 : 10);
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    particle.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    particle.style.left = x + 'px';
+                    particle.style.top = y + 'px';
+                    particle.style.animationDelay = (i * 0.06) + 's';
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => particle.remove(), 1400);
+                }
+            }
+        }
+
+        function createSparkles(x, y) {
+            if (!isMobile) {
+                const sparkleSymbols = ['✨', '⭐', '💫', '✦'];
+                const sparkleCount = isSmallScreen ? 2 : (isMobile ? 4 : 6);
+                for (let i = 0; i < sparkleCount; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+                    sparkle.textContent = sparkleSymbols[Math.floor(Math.random() * sparkleSymbols.length)];
+                    sparkle.style.left = (x + (Math.random() - 0.5) * 60) + 'px';
+                    sparkle.style.top = (y + (Math.random() - 0.5) * 60) + 'px';
+                    sparkle.style.animationDelay = (i * 0.08) + 's';
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => sparkle.remove(), 1600);
+                }
+            }
+        }
+
+        function createConfetti() {
+            const confettiSymbols = ['💕', '💖', '💗', '💓', '💞', '❤️', '✨', '⭐'];
+            const confettiCount = isSmallScreen ? 25 : (isMobile ? 35 : 50);
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.textContent = confettiSymbols[Math.floor(Math.random() * confettiSymbols.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-50px';
+                confetti.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
+                confetti.style.setProperty('--tx', (Math.random() - 0.5) * 300 + 'px');
+                confetti.style.animationDelay = (i * 0.05) + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        function createGlow(x, y) {
+            const glow = document.createElement('div');
+            glow.classList.add('glow');
+            glow.style.left = (x - 100) + 'px';
+            glow.style.top = (y - 100) + 'px';
+            document.body.appendChild(glow);
+            
+            setTimeout(() => glow.remove(), 1000);
+        }
+
+        function createLightBeam(x, y) {
+            const beam = document.createElement('div');
+            beam.classList.add('light-beam');
+            beam.style.left = (x - 2) + 'px';
+            beam.style.top = (y - 100) + 'px';
+            beam.style.width = '4px';
+            beam.style.height = '200px';
+            beam.style.transformOrigin = 'top center';
+            document.body.appendChild(beam);
+            
+            setTimeout(() => beam.remove(), 1200);
+        }
+
+        function updateCounter(count, startTime) {
+            const counter = document.getElementById('counter');
+            const now = new Date();
+            const elapsed = Math.floor((now - startTime) / 1000);
+            
+            let timeText = '';
+            if (elapsed < 60) {
+                timeText = elapsed + ' сек';
+            } else {
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                timeText = minutes + ' мин ' + seconds + ' сек';
+            }
+            
+            counter.textContent = '❤️ сказал это уже ' + count + ' раз | говорю это уже ' + timeText;
+        }
+
+        function openSurprise() {
+            const hiddenContent = document.getElementById('hiddenContent');
+            const closeBtn = document.getElementById('closeBtn');
+            const counter = document.getElementById('counter');
+            const messagesContainer = document.getElementById('messagesContainer');
+            const animationContainer = document.getElementById('animationContainer');
+            const kissEffect = document.getElementById('kissEffect');
+            const card = document.querySelector('.card');
+
+            // Скрываем главный экран
+            if (card) {
+                card.style.opacity = '0';
+                card.style.visibility = 'hidden';
+            }
+
+            hiddenContent.classList.add('active');
+            closeBtn.classList.add('active');
+
+            // Анимация целования длится 3.5 секунды (2 сек ходьба + 1.5 поцелуй)
+            setTimeout(() => {
+                if (!hiddenContent.classList.contains('active')) return;
+                
+                // Confetti эффект при поцелуе!
+                createConfetti();
+                
+                // Скрываем сцену и показываем сообщения
+                animationContainer.style.display = 'none';
+                messagesContainer.style.display = 'flex';
+                
+                // Показываем счетчик
+                counter.classList.add('active');
+                const startTime = new Date();
+                let messageCount = 0;
+
+                // Взрыв эффектов в центре
+                createParticles(window.innerWidth / 2, window.innerHeight / 2);
+                createSparkles(window.innerWidth / 2, window.innerHeight / 2);
+                createGlow(window.innerWidth / 2, window.innerHeight / 2);
+
+                // Обновляем счетчик времени каждую секунду
+                const timerInterval = setInterval(() => {
+                    if (!hiddenContent.classList.contains('active')) {
+                        clearInterval(timerInterval);
+                        return;
+                    }
+                    updateCounter(messageCount, startTime);
+                }, 1000);
+
+                // Бесконечный поток сообщений
+                let messageIndex = 0;
+                const messageInterval = isMobile ? 1500 : 800; // Больше времени для чтения
+                const messageTimer = setInterval(() => {
+                    if (!hiddenContent.classList.contains('active')) {
+                        clearInterval(messageTimer);
+                        clearInterval(timerInterval);
+                        return;
+                    }
+
+                    const nickname = nicknames[Math.floor(Math.random() * nicknames.length)];
+                    const heart1 = hearts[Math.floor(Math.random() * hearts.length)];
+                    const heart2 = hearts[Math.floor(Math.random() * hearts.length)];
+
+                    const message = document.createElement('div');
+                    message.classList.add('message');
+                    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                    message.textContent = heart1 + ' ' + phrase + ' ' + nickname + ' ' + heart2;
+                    message.style.animationDelay = '0s';
+                    
+                    // По центру экрана
+                    message.style.position = 'fixed';
+                    message.style.left = '50%';
+                    message.style.top = '50%';
+                    message.style.transform = 'translate(-50%, -50%)';
+                    
+                    messagesContainer.appendChild(message);
+
+                    // Эффекты от сообщения
+                    const x = window.innerWidth / 2;
+                    const y = window.innerHeight / 2;
+
+                    createGlow(x, y);
+                    
+                    if (!isMobile) {
+                        createLightBeam(x, y);
+                    }
+                    
+                    if (messageIndex % 2 === 0) {
+                        createParticles(x, y);
+                    } else {
+                        createSparkles(x, y);
+                    }
+
+                    // Ограничиваем видимые сообщения - одно за раз
+                    const messages = messagesContainer.querySelectorAll('.message');
+                    if (messages.length > 1) {
+                        messages[0].remove();
+                    }
+
+                    messageCount++;
+                    updateCounter(messageCount, startTime);
+                    messageIndex++;
+                }, messageInterval);
+
+            }, 1555);
+        }
+
+        function closeSurprise() {
+            const hiddenContent = document.getElementById('hiddenContent');
+            const closeBtn = document.getElementById('closeBtn');
+            const counter = document.getElementById('counter');
+            const animationContainer = document.getElementById('animationContainer');
+            const messagesContainer = document.getElementById('messagesContainer');
+            const card = document.querySelector('.card');
+            
+            // Показываем главный экран обратно
+            if (card) {
+                card.style.opacity = '1';
+                card.style.visibility = 'visible';
+            }
+            
+            hiddenContent.classList.remove('active');
+            closeBtn.classList.remove('active');
+            counter.classList.remove('active');
+            animationContainer.style.display = 'flex';
+            messagesContainer.style.display = 'none';
+            messagesContainer.innerHTML = '';
+            isLoading = true;
+        }
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('hiddenContent').classList.contains('active')) {
+                closeSurprise();
+            }
+        });
+
+        // Свайп для мобильных устройств (закрытие свайпом вниз)
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.changedTouches[0].screenY;
+        }, false);
+
+        document.addEventListener('touchend', (e) => {
+            touchEndY = e.changedTouches[0].screenY;
+            const swipeDistance = touchEndY - touchStartY;
+            
+            // Если свайп вниз больше 100px - закрываем
+            if (swipeDistance > 100 && document.getElementById('hiddenContent').classList.contains('active')) {
+                closeSurprise();
+            }
+        }, false);
+    </script>
+</body>
+</html>
