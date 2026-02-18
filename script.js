@@ -1,5 +1,6 @@
 const hearts = ['💕', '💖', '💗', '💓', '💞', '❤️', '💘'];
 const nicknames = ['киса', 'зая', 'любимая', 'милая', 'пуся', 'солнышко', 'сладкая', 'красивая', 'малышка', 'настюшенька'];
+const nicknames_t = ['кисы', 'зайки', 'любимой', 'милой', 'самой красивой', 'прекрасной', 'сладкой', 'красивой', 'малышки', 'настюши', 'настюшеньки'];
 const phrases = [
     'я люблю тебя',
     'я очень сильно тебя люблю',
@@ -15,6 +16,7 @@ let isLoading = true;
 
 const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const isSmallScreen = window.innerWidth <= 480;
+
 
 function createParticles(x, y) {
     if (!isMobile) {
@@ -174,16 +176,40 @@ function openSurprise() {
             const message = document.createElement('div');
             message.classList.add('message');
             const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-            message.textContent = heart1 + ' ' + phrase + ' ' + nickname + ' ' + heart2;
+            const fullText = heart1 + ' ' + phrase + ' ' + nickname + ' ' + heart2;
             message.style.animationDelay = '0s';
-            
-            // По центру экрана
-            message.style.position = 'fixed';
-            message.style.left = '50%';
-            message.style.top = '50%';
-            message.style.transform = 'translate(-50%, -50%)';
-            
+
+            // positioning handled by `.messages-container` (stacked, centered)
+
+            // inner span for typed text
+            const textSpan = document.createElement('span');
+            textSpan.className = 'message-text';
+            message.appendChild(textSpan);
+
             messagesContainer.appendChild(message);
+
+            // mark as typing so css keeps it visible
+            message.classList.add('typing');
+
+            // typing speed (ms per char)
+            const charDelay = isMobile ? 70 : 30;
+
+            // type the text into the span
+            typeText(textSpan, fullText, charDelay, () => {
+                // after finished typing: hide caret and clear typing state
+                textSpan.classList.add('done');
+                message.classList.remove('typing');
+
+                // schedule fade-out + removal so message stays visible longer
+                const holdTime = isMobile ? 3000 : 4500; // ms to keep after typing
+                setTimeout(() => {
+                    message.classList.add('fade-out');
+                    // remove from DOM after fade transition
+                    setTimeout(() => {
+                        if (message.parentElement) message.remove();
+                    }, 440);
+                }, holdTime);
+            });
 
             // Эффекты от сообщения
             const x = window.innerWidth / 2;
@@ -201,11 +227,7 @@ function openSurprise() {
                 createSparkles(x, y);
             }
 
-            // Ограничиваем видимые сообщения - одно за раз
-            const messages = messagesContainer.querySelectorAll('.message');
-            if (messages.length > 1) {
-                messages[0].remove();
-            }
+            // (old immediate-removal removed) messages will be removed after typing+hold
 
             messageCount++;
             updateCounter(messageCount, startTime);
@@ -238,10 +260,37 @@ function closeSurprise() {
     isLoading = true;
 }
 
+function openGallery() {
+    const galleryContainer = document.getElementById('galleryContainer');
+    const card = document.querySelector('.card');
+
+    if (card) {
+        card.style.opacity = '0';
+        card.style.visibility = 'hidden';
+    }
+    galleryContainer.classList.add('active');
+}
+
+function closeGallery() {
+    const galleryContainer = document.getElementById('galleryContainer');
+    const card = document.querySelector('.card');
+
+    if (card) {
+        card.style.opacity = '1';
+        card.style.visibility = 'visible';
+    }
+    galleryContainer.classList.remove('active');
+}
+
 // Закрытие по Escape
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && document.getElementById('hiddenContent').classList.contains('active')) {
-        closeSurprise();
+    if (e.key === 'Escape') {
+        if (document.getElementById('hiddenContent').classList.contains('active')) {
+            closeSurprise();
+        }
+        if (document.getElementById('galleryContainer').classList.contains('active')) {
+            closeGallery();
+        }
     }
 });
 
@@ -262,3 +311,132 @@ document.addEventListener('touchend', (e) => {
         closeSurprise();
     }
 }, false);
+
+/* --- Small decorative features: floating hearts and cycling tagline --- */
+function spawnFloatingHeart() {
+    const container = document.getElementById('floatingHearts');
+    if (!container) return;
+
+    const heart = document.createElement('div');
+    heart.className = 'heart-floating';
+    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+
+    // Random horizontal position, biased toward center
+    const x = (window.innerWidth / 2) + (Math.random() - 0.5) * (window.innerWidth * 0.6);
+    const y = window.innerHeight - (Math.random() * 80 + 30);
+    heart.style.left = Math.max(6, Math.min(window.innerWidth - 40, x)) + 'px';
+    heart.style.top = y + 'px';
+    heart.style.fontSize = (Math.random() * 0.6 + 0.9) + 'rem';
+    heart.style.opacity = 0.95;
+
+    container.appendChild(heart);
+    setTimeout(() => heart.remove(), 6200);
+}
+
+let floatingInterval = null;
+function startFloatingHearts() {
+    if (floatingInterval) return;
+    // spawn one immediately, then periodically
+    spawnFloatingHeart();
+    floatingInterval = setInterval(spawnFloatingHeart, 1600 + Math.random() * 1200);
+}
+
+function stopFloatingHearts() {
+    if (floatingInterval) {
+        clearInterval(floatingInterval);
+        floatingInterval = null;
+    }
+}
+
+/* Tagline cycling (type names after "для") */
+function startTaglineCycle() {
+    const tagEl = document.getElementById('tagline');
+    if (!tagEl) return;
+
+    // Use the existing `nicknames` array so it types 'киса', 'зая', etc.
+    const items = Array.isArray(nicknames_t) && nicknames_t.length ? nicknames_t.slice() : ['киса'];
+    let idx = 0;
+    let charIdx = 0;
+    let deleting = false;
+
+    function tick() {
+        const text = items[idx];
+        if (!deleting) {
+            tagEl.textContent = text.slice(0, ++charIdx);
+            if (charIdx === text.length) {
+                deleting = true;
+                setTimeout(tick, 900);
+                return;
+            }
+        } else {
+            tagEl.textContent = text.slice(0, --charIdx);
+            if (charIdx === 0) {
+                deleting = false;
+                idx = (idx + 1) % items.length;
+            }
+        }
+        setTimeout(tick, deleting ? 40 : 90);
+    }
+    tick();
+}
+
+// Start small decorations after DOM content loaded
+document.addEventListener('DOMContentLoaded', () => {
+    startFloatingHearts();
+    startTaglineCycle();
+
+    const interactiveHeart = document.getElementById('interactive-heart');
+    if (interactiveHeart) {
+        interactiveHeart.addEventListener('click', (e) => {
+            const rect = interactiveHeart.getBoundingClientRect();
+            // Get the center of the button
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+
+            // Create a burst of hearts
+            for (let i = 0; i < 15; i++) {
+                createFlyingHeart(x, y);
+            }
+        });
+    }
+});
+
+function createFlyingHeart(x, y) {
+    const heart = document.createElement('div');
+    heart.classList.add('flying-heart');
+    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+
+    // Randomize starting position slightly around the button's center
+    const offsetX = (Math.random() - 0.5) * 50;
+    const offsetY = (Math.random() - 0.5) * 50;
+
+    heart.style.left = `${x + offsetX}px`;
+    heart.style.top = `${y + offsetY}px`;
+    
+    // Add variety to the animation
+    heart.style.animationDuration = `${Math.random() * 0.8 + 1.2}s`; // 1.2s to 2.0s
+    heart.style.fontSize = `${Math.random() * 12 + 16}px`; // 16px to 28px
+
+    document.body.appendChild(heart);
+
+    // Remove the heart after the animation is done
+    setTimeout(() => {
+        heart.remove();
+    }, 2000); // Should match the longest animation time
+}
+
+
+// Simple function to type text into an element char-by-char
+function typeText(el, text, delay = 30, onComplete) {
+    let i = 0;
+    function next() {
+        if (i <= text.length) {
+            el.textContent = text.slice(0, i);
+            i++;
+            setTimeout(next, delay + Math.random() * (delay * 0.25));
+        } else {
+            if (typeof onComplete === 'function') onComplete();
+        }
+    }
+    next();
+}

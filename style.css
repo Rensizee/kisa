@@ -232,6 +232,12 @@ body::after {
     transform: translateY(-1px) scale(0.98);
 }
 
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
 /* Скрытый контент */
 .hidden-content {
     position: fixed;
@@ -249,6 +255,70 @@ body::after {
     padding: 40px 20px;
     animation: fadeInContent 0.6s ease-out;
 }
+
+/* Gallery styles */
+.gallery-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(20px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 110;
+    overflow-y: auto;
+    padding: 80px 20px;
+    animation: fadeInContent 0.6s ease-out;
+}
+
+.gallery-container.active {
+    display: flex;
+}
+
+.gallery-container .close-btn {
+    display: flex;
+    z-index: 112;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    border: 2px solid #ff6b9d;
+    box-shadow: 0 10px 40px rgba(255, 107, 157, 0.2);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 50px rgba(255, 107, 157, 0.4);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+
 
 .hidden-content::before {
     content: '';
@@ -277,7 +347,11 @@ body::after {
     position: fixed;
     top: 0;
     left: 0;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
     z-index: 102;
     pointer-events: none;
 }
@@ -300,26 +374,61 @@ body::after {
     white-space: normal;
     z-index: 102;
     box-shadow: 0 12px 40px rgba(255, 107, 157, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.08);
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    transform: translateY(0);
     text-align: center;
     max-width: 80vw;
     line-height: 1.5;
 }
 
+/* Typewriter text inside message */
+.message-text {
+    display: inline-block;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.message-text::after {
+    content: '|';
+    display: inline-block;
+    margin-left: 6px;
+    opacity: 0.9;
+    animation: caretBlink 0.9s steps(1) infinite;
+    color: rgba(255, 220, 235, 0.9);
+}
+
+@keyframes caretBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+.message.typing {
+    /* ensure visible while typing */
+    opacity: 1;
+}
+
+/* Hide caret once typing finished */
+.message-text.done::after {
+    content: '';
+}
+
+/* Fade-out helper when removing messages */
+.message.fade-out {
+    opacity: 0 !important;
+    transform: translateY(-40px) scale(0.98) !important;
+    transition: opacity 420ms ease, transform 420ms ease;
+}
+
 @keyframes messageAppear {
     0% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.3) rotate(-30deg);
-        filter: blur(20px);
+        transform: translateY(18px) scale(0.92) rotate(-4deg);
+        filter: blur(12px);
     }
-    45% {
-        opacity: 1;
-    }
+    50% { opacity: 1; filter: blur(0); }
     100% {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        transform: translateY(0) scale(1) rotate(0deg);
         filter: blur(0);
     }
 }
@@ -981,3 +1090,129 @@ body::after {
         border-radius: 8px;
     }
 }
+
+/* --- New small UI additions --- */
+.desc {
+    color: rgba(255, 142, 181, 0.95);
+    margin-top: 12px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    opacity: 0.95;
+}
+
+.tagline {
+    color: #ffd6e6;
+    margin-left: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.tagline::after {
+    content: '|';
+    margin-left: 6px;
+    opacity: 0.8;
+    animation: caretBlink 1s steps(1) infinite;
+}
+
+@keyframes caretBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.floating-hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.heart-floating {
+    position: absolute;
+    font-size: 1.1rem;
+    opacity: 0.95;
+    transform: translateY(0) scale(1);
+    animation: floatUpSlow 6s linear forwards;
+    filter: drop-shadow(0 6px 20px rgba(255, 107, 157, 0.2));
+}
+
+@keyframes floatUpSlow {
+    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.95; }
+    40% { opacity: 0.9; }
+    100% { transform: translateY(-420px) rotate(45deg) scale(0.8); opacity: 0; }
+}
+
+.footer {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 12px;
+    color: #ffcfe3;
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.08), rgba(255, 107, 157, 0.02));
+    border: 1px solid rgba(255, 107, 157, 0.12);
+    z-index: 60;
+    box-shadow: 0 8px 30px rgba(255, 107, 157, 0.06);
+}
+
+@media (max-width: 480px) {
+    .desc { font-size: 0.9rem; }
+    .tagline { display: none; }
+    .footer { font-size: 0.8rem; padding: 6px 12px; }
+}
+
+#interactive-heart {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.25), rgba(255, 107, 157, 0.1));
+    border: 2px solid #ff6b9d;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulse-heart 2.5s infinite ease-in-out;
+}
+
+#interactive-heart:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(255, 107, 157, 0.5);
+}
+
+@keyframes pulse-heart {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.flying-heart {
+    position: absolute;
+    pointer-events: none;
+    font-size: 24px;
+    opacity: 1;
+    animation: float-up-heart 2s ease-out forwards;
+}
+
+@keyframes float-up-heart {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-250px) scale(0.5) rotate(360deg);
+        opacity: 0;
+    }
+}
+
